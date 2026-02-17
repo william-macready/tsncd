@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Image Handler</title>
+  <!-- Flex: https://tympanus.net/codrops/css_reference/flexbox/ -->
+   <!-- Anchors: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning/Using -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex-swap.min.css" integrity="sha384-oE62rfNxlADjj7sYXu/OIIiKXBxbmilG++uiViOou8iV+xFOd72/9XPxKfsiHQRC" crossorigin="anonymous">
+  <style>
+    body {
+      font-family: sans-serif;
+      /* max-width: 600px; */
+      margin: 0 auto;
+      padding: 20px;
+    }
+    button {
+      margin-right: 10px;
+      padding: 5px 10px;
+    }
+    .diagram-container {
+      display: flex;
+      flex-direction: row;
+      min-width: 50px;
+      width: fit-content;
+      height: fit-content;
+    }
+    .horizontal-box {
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      align-items: center;
+      height: fit-content;
+      width: fit-content;
+    }
+    .vertical-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      height: fit-content;
+      width: fit-content;
+    }
+    .anchor {
+      height: 20px;
+      width: 0px;
+    }
+    .fill {
+      height: 100%;
+      width: 100%;
+      /* display: flex;
+      align-items: center;
+      justify-items: center; */
+    }
+    .times {
+      display: flex;
+      flex-direction: column;
+      /* align-items: stretch; */
+      width: 100%;
+      flex-grow: 1; /* Don't grow unless forced */
+      flex-shrink: 1; /* Can shrink */
+      flex-basis: auto; /* Fit content */
+      justify-content: space-evenly;
+      /* min-width: 50px;
+      max-width: 100px; */
+      /* width: fit-content; */
+      /* max-width: 100px; */
+      flex: 1;
+    }
+    .compose {
+      display: flex;
+      flex-direction: row;
+      flex: 1 1 auto;
+      justify-content: start;
+      align-items: center;
+      height: fit-content;
+      width: fit-content;
+    }
+    .floating-svg {
+      position: absolute;
+      left: 0px;
+      /* right: 0px; */
+      top: 0px;
+      width: 0px;
+      height: 0px;
+      background-color: lightblue;
+      z-index: -2;
+    }
+    .floating-svg-2 {
+      position: absolute;
+      left: 0px;
+      /* right: 0px; */
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+    .floating-text {
+      /* This ensures it is not part of flexbox sizing. */
+      position: relative;
+      width: 0px;
+      height: 0px;
+      background-color: white;
+      /* border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 10px; */
+      font-family: Arial, sans-serif;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      /* No need for z-index unless you have multiple overlapping elements */
+    }
+    .array-indexes {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      flex-grow: 1; /* Don't grow unless forced */
+      flex-shrink: 1; /* Can shrink */
+      flex-basis: auto; /* Fit content */
+      justify-content: space-evenly;
+      flex: 1;
+      width: fit-content;
+    }
+    .times-gap {
+      position: relative;
+      /* flex: 1 1 20px; */
+      height: 20px;
+      width: 100%;
+      /* width: fit-content; */
+      display: flex;
+      overflow: hidden;
+      width: fit-content;
+      svg { 
+        stroke-dasharray: 10,10;
+        min-width: 10px;
+        /* width: 100%; */
+      }
+    }
+    .separator {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+    }
+    .morphism {
+      display: flex;
+      flex-direction: row;
+      /* min-width: 50px; */
+      width: fit-content;
+      height: 50px;
+      overflow: hidden;
+    }
+    .broadcasted {
+      display: flex;
+      /* flex: 0 1 50px; */
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+    }
+    .broadcasted-core {
+      position: relative;
+      width: 50px;
+      /* height: 50px; */
+      min-height: 0;
+      /* align-self: stretch; */
+    }
+    .broadcasted-horizontal-box {
+      display: flex;
+      /* flex: 1 1 auto; */
+      width: fit-content;
+      flex-direction: row;
+      /* justify-content: flex-start; */
+      align-items: center;
+      min-height: 0;
+    }
+    .broadcasted-anchor-column {
+      display: flex;
+      flex: 0 1 0px;
+      flex-direction: column;
+      width: 10px;
+      justify-content: space-around;
+    }
+    .broadcasted-anchor {
+      position: relative;
+      width: 10px;
+      height: 0px;
+      flex: 1 1 0px;
+    }
+    .wire {
+      position: relative;
+      flex: 1 1 20px;
+      height: 0px;
+      width: 0px;
+    }
+    /* New Styles */
+    .stack_main {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      min-width: 50px;
+      width: fit-content;
+      height: fit-content;
+    }
+    .stack_annotations {
+      position: absolute;
+      z-index: 10;
+      display: flex;
+      flex-direction: row;
+      min-width: 50px;
+      width: fit-content;
+      height: fit-content;
+    }
+    .annotation_katex {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>tsncd</h1>
+  
+  <!-- The image element our class will work with -->
+  <!-- <img id="myImage" src="/api/placeholder/200/150" alt="Sample image"> -->
+  
+  <div id="diagram" class="stack_main">
+    <!-- Diagram content will be generated here -->
+  </div>
+
+  <script type="module" src="dist/index.js"></script>
+</body>
+</html>

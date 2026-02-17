@@ -1,0 +1,8 @@
+- [x] Add Blocks
+- [ ] Cleanup addAnnotations / enableAnnotations for anchors
+- [ ] Add events (hover to highlight axes)
+- [ ] Multiple placement rounds
+- [ ] Transformer Operations
+    - [ ] Normalized SoftMax missing.
+- [ ] Block continuation
+- [ ] Graph Rendering
