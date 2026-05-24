@@ -17,6 +17,7 @@ export {
     Datatype,
     Reals,
     Natural,
+    Bool,
     Array,
     WeaveMode,
     Weave,

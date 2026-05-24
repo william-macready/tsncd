@@ -4,6 +4,7 @@ import * as cr from '../CategoryRenderer';
 import * as ut from '../../../utilities/utilities';
 import * as cat from '../../../data_structure/Category';
 import * as ops from '../../../data_structure/Operators';
+import * as tl from '../../../data_structure/TensorLogic';
 import { Separated } from '../../../utilities/Separated';
 //import * as cr from '../StandardCategoryRenderer';
 import * as crs from '../CategoryRendererSettings';
@@ -304,5 +305,33 @@ class EmbeddingBox<B extends cat.Datatype, A extends cat.Axis>
             rect,
             this.annotation,
         )
+    }
+}
+
+// Displays ∃ for Bool-output TensorEquation (existential quantification over
+// contracted axes) and Σ for Reals-output (summation). The signal is the output
+// weave datatype, matching Python's ConstructedTensorEquation.demote flag.
+@bb.opsRegistry.registerClass(tl.TensorEquation)
+class TensorEquationBox<B extends cat.Datatype, A extends cat.Axis>
+    extends bb.OperationBox<B, A, tl.TensorEquation> {
+    private annotation: rh.AnnotationElement;
+    constructor(
+        public categoryRenderer: bb.BroadcastedRenderer<B, A>,
+        public target: cat.Broadcasted<B, A, tl.TensorEquation>,
+    ) {
+        super(categoryRenderer, target, {x: 40, y: 30});
+        const isBool = target.output_weaves[0]?.datatype instanceof cat.Bool;
+        this.annotation = new rh.AnnotationElement(
+            this.renderHandler,
+            isBool ? '\\exists' : '\\Sigma',
+            {font_size: 1.2},
+        );
+    }
+    update(): void {
+        super.update();
+        this.renderHandler.annotation_handler.addAnnotation(
+            this.rectangle(),
+            this.annotation,
+        );
     }
 }

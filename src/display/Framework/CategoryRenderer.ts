@@ -44,7 +44,7 @@ export abstract class Anchor<A> extends Meridian<A> {
     public further: Anchor<A>[] = [];
     protected prior: Anchor<A>[] = [];
     public skip: boolean = false;
-    protected curve_attributes: Partial<dhd.LineAttrs> = {}; 
+    public curve_attributes: Partial<dhd.LineAttrs> = {};
     constructor(
         public categoryRenderer: CategoryRenderer<any, any, A>,
     ){

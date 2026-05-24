@@ -26,10 +26,18 @@ export class Natural extends Datatype {
 }
 
 @fd.register_term
+export class Bool extends Datatype {
+    to_latex(): string | undefined {
+        return '\\mathbb{B}';
+    }
+}
+
+@fd.register_term
 export class Array<B extends Datatype, A extends sc.Axis> extends fd.Term {
     constructor(
         readonly datatype: B,
         readonly _shape: A[] = [],
+        readonly iverson_expr: string | null = null,
     ) {super();}
 
     shape(): pc.ProdObject<A> {
@@ -49,16 +57,18 @@ export class Weave<B extends Datatype, A extends sc.Axis> extends fd.Term {
     constructor(
         readonly datatype: B,
         readonly _shape: (A | WeaveMode)[] = [],
+        readonly iverson_expr: string | null = null,
     ) {super();}
 
     imprint_to_degree(target: Iterable<A>): Array<B, A> {
         const iterator = target[Symbol.iterator]();
         return new Array<B, A>(
             this.datatype,
-            this._shape.map(s => 
-                s instanceof sc.Axis 
+            this._shape.map(s =>
+                s instanceof sc.Axis
                 ? s : iterator.next().value
             ),
+            this.iverson_expr,
         );
     }
 
@@ -78,6 +88,7 @@ export class Weave<B extends Datatype, A extends sc.Axis> extends fd.Term {
         return new Array<B, A>(
             this.datatype,
             this.select_target(this._shape) as A[],
+            this.iverson_expr,
         )
     }
 }

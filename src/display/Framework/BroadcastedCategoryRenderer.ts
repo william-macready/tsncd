@@ -1,5 +1,6 @@
 import * as rh from '../Render/RenderHandler';
 import * as cr from './CategoryRenderer';
+import * as dhd from '../Render/DrawHandler';
 //import * as bm from './BroadcastedMeridian';
 import * as ut from '../../utilities/utilities';
 import * as cat from '../../data_structure/Category';
@@ -35,12 +36,14 @@ export class DatatypeAnchor<B extends cat.Datatype> extends cr.Anchor<B> {
     constructor(
         public categoryRenderer: BroadcastedRenderer<B, any>,
         public target: B,
+        extra_curve_attributes: Partial<dhd.LineAttrs> = {},
     ) {
         super(categoryRenderer);
         this.aux.borderColor = 'lime';
         this.curve_attributes = {
             ...this.curve_attributes,
             'stroke-width': '2px',
+            ...extra_curve_attributes,
         }
     }
     update(): void {
@@ -93,10 +96,34 @@ export class ArrayMeridian<B extends cat.Datatype, A extends cat.Axis> extends c
         this.axes_anchors = categoryRenderer.strideRenderer.display_prod_object(
             this.target.shape()
         );
+        if (this.target.datatype instanceof cat.Bool) {
+            for (const anchor of this.axes_anchors.anchors) {
+                anchor.curve_attributes = {
+                    ...anchor.curve_attributes,
+                    'stroke-dasharray': '2,6',
+                    stroke: '#f59e0b',
+                };
+            }
+            if (this.target.iverson_expr) {
+                const expr = this.target.iverson_expr;
+                const anchors = this.axes_anchors.anchors;
+                anchors[0].getAnnotation = () => new rh.AnnotationElement(
+                    this.renderHandler, expr, { font_size: 0.65 }
+                );
+                for (let i = 1; i < anchors.length; i++) {
+                    anchors[i].getAnnotation = () => undefined;
+                }
+            }
+        }
         if (this.target.datatype instanceof cat.Natural) {
             this.datatype_anchor = new DatatypeAnchor(
-                categoryRenderer, 
+                categoryRenderer,
                 this.target.datatype);
+        } else if (this.target.datatype instanceof cat.Bool) {
+            this.datatype_anchor = new DatatypeAnchor(
+                categoryRenderer,
+                this.target.datatype,
+                { stroke: '#f59e0b' });
         }
         this.children = 
             this.datatype_anchor
