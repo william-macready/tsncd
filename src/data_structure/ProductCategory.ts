@@ -6,6 +6,7 @@ export type ProdCategory<L, M extends Morphism<L>> =
     M | Rearrangement<L>
     | ProductOfMorphisms<L, ProdCategory<L, M>>
     | Composed<L, ProdCategory<L, M>>
+    | ThreadedComposed<L, ProdCategory<L, M>>
     | Block<L, ProdCategory<L, M>>;
 
 @fd.register_term
@@ -88,6 +89,15 @@ export class Composed<L, M extends Morphism<L>> extends Morphism<L> {
     cod(): ProdObject<L> {
         return this.content[this.content.length - 1].cod();
     }
+}
+
+@fd.register_term
+export class ThreadedComposed<L, M extends Morphism<L>> extends Composed<L, M> {
+    constructor(
+        content: M[],
+        readonly routing: number[][],
+        readonly n_external: number,
+    ) { super(content); }
 }
 
 @fd.register_term
