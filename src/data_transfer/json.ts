@@ -1,5 +1,6 @@
 import * as fd from '../data_structure/Term';
-import output from '../json_files/transformer.json';
+import output from '../json_files/mlp.json';
+// import output from '../json_files/transformer.json';
 // import output from '../json_files/output.json';
 
 // type JSONType = Record<string, JSONType> | JSONType[] | string | null | number | boolean;

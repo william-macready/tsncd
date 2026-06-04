@@ -8,7 +8,32 @@ import * as addops from './display/Framework/Operations/additionalOperationBoxes
 
 import * as wst from './data_transfer/websockets_transfer';
 import * as mlc from './display/Framework/Multiline';
+import { toPng } from 'html-to-image';
 console.log(addops);
+
+// Rasterise the composite diagram (HTML boxes + KaTeX labels + SVG wire layers)
+// to a PNG and download it. The diagram is not pure SVG, so a DOM-to-image pass
+// is required to capture every layer. PAD covers the 10px buffer the SVG wire
+// layers extend beyond the #diagram box (see HTMLDrawHandler OFFSET).
+async function exportDiagramPng(container: HTMLElement): Promise<void> {
+    const PAD = 12;
+    const rect = container.getBoundingClientRect();
+    const dataUrl = await toPng(container, {
+        backgroundColor: '#ffffff',
+        pixelRatio: 2,
+        cacheBust: true,
+        width: Math.ceil(rect.width) + 2 * PAD,
+        height: Math.ceil(rect.height) + 2 * PAD,
+        style: {
+            transform: `translate(${PAD}px, ${PAD}px)`,
+            transformOrigin: 'top left',
+        },
+    });
+    const link = document.createElement('a');
+    link.download = 'diagram.png';
+    link.href = dataUrl;
+    link.click();
+}
 class DiagramContainer {
 }
 
@@ -52,6 +77,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     termPass(json_term);
+
+    const export_button = document.getElementById('export-png') as HTMLButtonElement | null;
+    if (export_button) {
+        export_button.addEventListener('click', () => {
+            exportDiagramPng(container).catch((err) => {
+                console.error('PNG export failed', err);
+                alert('PNG export failed: ' + err);
+            });
+        });
+    }
 
     const client = new wst.WebSocketClient(
         'ws://localhost:8765',
