@@ -19,7 +19,7 @@ export class Identity extends Elementwise {
 @fd.register_term
 export class ReLU extends Elementwise {
     constructor(
-        readonly name: fd.DynamicName | null = new fd.DynamicName('R'),
+        readonly name: fd.DynamicName | null = new fd.DynamicName('\\mathrm{relu}'),
     ) { super(name); }
 }
 

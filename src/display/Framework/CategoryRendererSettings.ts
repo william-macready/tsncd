@@ -73,6 +73,9 @@ export const DefaultBroadcastedRendererSettings: BroadcastedRendererSettings = {
             'stroke-width': '2px',
         }
     },
+    // Wider horizontal gap between composed steps so wire labels (axis
+    // name + size) have room and don't collide.
+    composed_gap_dims: {x: 60, y: 20},
     broadcast_offset_x: 8,
     broadcast_core_gap: 30,
     operation_core_dims: {x: 30, y: 30},

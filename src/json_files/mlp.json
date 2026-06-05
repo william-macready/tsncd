@@ -1,6 +1,6 @@
 {
   "uid_repository": {
-    "912562935": {
+    "1425285455": {
       "__type__": "RawAxis",
       "uid": {
         "__type__": "UID",
@@ -8,20 +8,20 @@
           "__registered__": "type",
           "repr": "RawAxis"
         },
-        "_id": 912562935,
+        "_id": 1425285455,
         "_name": {
           "__type__": "DynamicName",
-          "body": "q",
+          "body": "d",
           "subscript": null,
           "settings": null
         }
       },
       "_size": {
         "__type__": "Integer",
-        "_value": 2
+        "_value": 4
       }
     },
-    "1560873395": {
+    "458141929": {
       "__type__": "RawAxis",
       "uid": {
         "__type__": "UID",
@@ -29,7 +29,7 @@
           "__registered__": "type",
           "repr": "RawAxis"
         },
-        "_id": 1560873395,
+        "_id": 458141929,
         "_name": {
           "__type__": "DynamicName",
           "body": "dff",
@@ -42,7 +42,7 @@
         "_value": 8
       }
     },
-    "175698890": {
+    "2113486823": {
       "__type__": "RawAxis",
       "uid": {
         "__type__": "UID",
@@ -50,79 +50,205 @@
           "__registered__": "type",
           "repr": "RawAxis"
         },
-        "_id": 175698890,
+        "_id": 2113486823,
         "_name": {
           "__type__": "DynamicName",
-          "body": "d",
+          "body": "q",
           "subscript": null,
           "settings": null
         }
       },
       "_size": {
         "__type__": "Integer",
-        "_value": 4
+        "_value": 2
       }
     }
   },
   "data": {
-    "__type__": "Composed",
+    "__type__": "ThreadedComposed",
     "content": [
+      {
+        "__type__": "Composed",
+        "content": [
+          {
+            "__type__": "Broadcasted",
+            "operator": {
+              "__type__": "Linear",
+              "name": {
+                "__type__": "DynamicName",
+                "body": "L",
+                "subscript": {
+                  "__type__": "DynamicName",
+                  "body": "W",
+                  "subscript": {
+                    "__type__": "DynamicName",
+                    "body": "in",
+                    "subscript": null,
+                    "settings": null
+                  },
+                  "settings": null
+                },
+                "settings": {
+                  "__type__": "DynamicNameSettings",
+                  "bold": true,
+                  "overline": false,
+                  "absolute": false
+                }
+              },
+              "bias": false
+            },
+            "input_weaves": [
+              {
+                "__type__": "Weave",
+                "datatype": {
+                  "__type__": "Reals"
+                },
+                "_shape": [
+                  {
+                    "__registered__": "enum",
+                    "type": "WeaveMode",
+                    "name": "TILED"
+                  },
+                  {
+                    "__ref__": 1425285455
+                  }
+                ],
+                "iverson_expr": null
+              }
+            ],
+            "output_weaves": [
+              {
+                "__type__": "Weave",
+                "datatype": {
+                  "__type__": "Reals"
+                },
+                "_shape": [
+                  {
+                    "__registered__": "enum",
+                    "type": "WeaveMode",
+                    "name": "TILED"
+                  },
+                  {
+                    "__ref__": 458141929
+                  }
+                ],
+                "iverson_expr": null
+              }
+            ],
+            "reindexings": [
+              {
+                "__type__": "Rearrangement",
+                "mapping": [
+                  0
+                ],
+                "_dom": [
+                  {
+                    "__ref__": 2113486823
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "__type__": "Broadcasted",
+            "operator": {
+              "__type__": "ReLU",
+              "name": {
+                "__type__": "DynamicName",
+                "body": "\\mathrm{relu}",
+                "subscript": null,
+                "settings": null
+              },
+              "operator": "sigmoid"
+            },
+            "input_weaves": [
+              {
+                "__type__": "Weave",
+                "datatype": {
+                  "__type__": "Reals"
+                },
+                "_shape": [
+                  {
+                    "__registered__": "enum",
+                    "type": "WeaveMode",
+                    "name": "TILED"
+                  },
+                  {
+                    "__registered__": "enum",
+                    "type": "WeaveMode",
+                    "name": "TILED"
+                  }
+                ],
+                "iverson_expr": null
+              }
+            ],
+            "output_weaves": [
+              {
+                "__type__": "Weave",
+                "datatype": {
+                  "__type__": "Reals"
+                },
+                "_shape": [
+                  {
+                    "__registered__": "enum",
+                    "type": "WeaveMode",
+                    "name": "TILED"
+                  },
+                  {
+                    "__registered__": "enum",
+                    "type": "WeaveMode",
+                    "name": "TILED"
+                  }
+                ],
+                "iverson_expr": null
+              }
+            ],
+            "reindexings": [
+              {
+                "__type__": "Rearrangement",
+                "mapping": [
+                  0,
+                  1
+                ],
+                "_dom": [
+                  {
+                    "__ref__": 2113486823
+                  },
+                  {
+                    "__ref__": 458141929
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
       {
         "__type__": "Broadcasted",
         "operator": {
-          "__type__": "TensorEquation",
-          "name": null,
-          "lhs_name": {
+          "__type__": "Linear",
+          "name": {
             "__type__": "DynamicName",
-            "body": "H",
-            "subscript": null,
-            "settings": null
+            "body": "L",
+            "subscript": {
+              "__type__": "DynamicName",
+              "body": "W",
+              "subscript": {
+                "__type__": "DynamicName",
+                "body": "out",
+                "subscript": null,
+                "settings": null
+              },
+              "settings": null
+            },
+            "settings": {
+              "__type__": "DynamicNameSettings",
+              "bold": true,
+              "overline": false,
+              "absolute": false
+            }
           },
-          "lhs_indices": [
-            {
-              "__ref__": 912562935
-            },
-            {
-              "__ref__": 1560873395
-            }
-          ],
-          "rhs": [
-            {
-              "__type__": "TensorRef",
-              "name": {
-                "__type__": "DynamicName",
-                "body": "W_in",
-                "subscript": null,
-                "settings": null
-              },
-              "axes": [
-                {
-                  "__ref__": 1560873395
-                },
-                {
-                  "__ref__": 175698890
-                }
-              ]
-            },
-            {
-              "__type__": "TensorRef",
-              "name": {
-                "__type__": "DynamicName",
-                "body": "X",
-                "subscript": null,
-                "settings": null
-              },
-              "axes": [
-                {
-                  "__ref__": 912562935
-                },
-                {
-                  "__ref__": 175698890
-                }
-              ]
-            }
-          ],
-          "operator": null
+          "bias": false
         },
         "input_weaves": [
           {
@@ -137,24 +263,7 @@
                 "name": "TILED"
               },
               {
-                "__ref__": 175698890
-              }
-            ],
-            "iverson_expr": null
-          },
-          {
-            "__type__": "Weave",
-            "datatype": {
-              "__type__": "Reals"
-            },
-            "_shape": [
-              {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
-              },
-              {
-                "__ref__": 175698890
+                "__ref__": 458141929
               }
             ],
             "iverson_expr": null
@@ -173,29 +282,13 @@
                 "name": "TILED"
               },
               {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
+                "__ref__": 1425285455
               }
             ],
             "iverson_expr": null
           }
         ],
         "reindexings": [
-          {
-            "__type__": "Rearrangement",
-            "mapping": [
-              1
-            ],
-            "_dom": [
-              {
-                "__ref__": 912562935
-              },
-              {
-                "__ref__": 1560873395
-              }
-            ]
-          },
           {
             "__type__": "Rearrangement",
             "mapping": [
@@ -203,87 +296,21 @@
             ],
             "_dom": [
               {
-                "__ref__": 912562935
-              },
-              {
-                "__ref__": 1560873395
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "__type__": "Broadcasted",
-        "operator": {
-          "__type__": "ReLU",
-          "name": {
-            "__type__": "DynamicName",
-            "body": "R",
-            "subscript": null,
-            "settings": null
-          },
-          "operator": "sigmoid"
-        },
-        "input_weaves": [
-          {
-            "__type__": "Weave",
-            "datatype": {
-              "__type__": "Reals"
-            },
-            "_shape": [
-              {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
-              },
-              {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
-              }
-            ],
-            "iverson_expr": null
-          }
-        ],
-        "output_weaves": [
-          {
-            "__type__": "Weave",
-            "datatype": {
-              "__type__": "Reals"
-            },
-            "_shape": [
-              {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
-              },
-              {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
-              }
-            ],
-            "iverson_expr": null
-          }
-        ],
-        "reindexings": [
-          {
-            "__type__": "Rearrangement",
-            "mapping": [
-              0,
-              1
-            ],
-            "_dom": [
-              {
-                "__ref__": 912562935
-              },
-              {
-                "__ref__": 1560873395
+                "__ref__": 2113486823
               }
             ]
           }
         ]
       }
-    ]
+    ],
+    "routing": [
+      [
+        0
+      ],
+      [
+        1
+      ]
+    ],
+    "n_external": 1
   }
 }

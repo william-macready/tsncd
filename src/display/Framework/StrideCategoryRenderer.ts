@@ -20,12 +20,17 @@ export class AxisAnchor<A extends cat.Axis> extends cr.Anchor<A> {
 
     public getAnnotation(): rh.AnnotationElement {
         if (!this.annotation) {
-            const name = this.target._size instanceof nm.Integer ?
-                this.target._size._value.toString() :
-                this.target.uid._name?.to_latex() || ''; 
+            // Label the wire by its axis name, with the size in parentheses when
+            // the axis is sized (e.g. "q\,(2)"). Fall back to whichever is present.
+            const name = this.target.uid._name?.to_latex();
+            const size = this.target._size instanceof nm.Integer
+                ? this.target._size._value.toString()
+                : undefined;
+            const label = name && size ? `${name}\\,(${size})`
+                : name || size || '';
             this.annotation = new rh.AnnotationElement(
                 this.renderHandler,
-                name,
+                label,
                 {font_size: 0.65},
             )
         }
