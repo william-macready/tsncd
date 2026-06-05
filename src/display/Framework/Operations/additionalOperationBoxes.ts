@@ -160,6 +160,7 @@ class AdditionOpBox<B extends cat.Datatype, A extends cat.Axis>
     }
 }
 
+@bb.opsRegistry.registerClass(ops.ReLU)
 @bb.opsRegistry.registerClass(ops.Elementwise)
 class ElementwiseBox<B extends cat.Datatype, A extends cat.Axis>
     extends bb.OperationBox<B, A, ops.Elementwise> {
