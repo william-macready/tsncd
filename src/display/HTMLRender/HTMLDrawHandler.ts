@@ -22,7 +22,7 @@ export function new_svg(parent: HTMLElement): SVGSVGElement {
 	return svg;
 }
 
-const BUFFER: number = 10;
+const BUFFER: number = 20;
 const OFFSET: Point = {x: -BUFFER, y: -BUFFER};
 export class HTMLDrawHandler extends DrawHandler<HTMLDivElement, SVGElement> {
     private drawLayer_svgs: Record<string, SVGSVGElement> = {};

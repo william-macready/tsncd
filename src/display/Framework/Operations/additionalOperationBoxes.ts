@@ -96,7 +96,7 @@ class LinearBox<B extends cat.Datatype, A extends cat.Axis>
         this.annotation = new rh.AnnotationElement(
             this.renderHandler,
             target.operator.name?.to_latex() ?? 'L',
-            {font_size: 1.2},
+            {font_size: 0.8},
         );
     }
     update(): void {
@@ -176,20 +176,26 @@ class ElementwiseBox<B extends cat.Datatype, A extends cat.Axis>
         this.aux.borderColor = '#E8EEEB';
         this.annotation = new rh.AnnotationElement(
             this.renderHandler,
-            `${target.operator.name?.to_latex()}`
+            `${target.operator.name?.to_latex()}`,
+            {font_size: 0.7},
         );
     }
     update(): void {
         super.update();
+        const RAISE = 10;
         const rect = this.rectangle();
         this.annotation.place(rect);
+        // Shift the annotation element up after placement so text_rectangle()
+        // returns correct x-coordinates based on the normal position.
+        const ann_el = this.renderHandler.get_rendered(this.annotation) as HTMLElement;
+        ann_el.style.transform = `translateY(-${RAISE}px)`;
         const top_left = {
             x: this.annotation.text_rectangle().left - 10,
-            y: this.rectangle().top_left.y,
+            y: rect.top_left.y - RAISE,
         }
         const top_right = {
             x: this.annotation.text_rectangle().right,
-            y: this.rectangle().top_left.y,
+            y: rect.top_left.y - RAISE,
         }
         const triangle = [
             {x: 10, y: 5},

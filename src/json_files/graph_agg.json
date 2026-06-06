@@ -1,6 +1,6 @@
 {
   "uid_repository": {
-    "1425285455": {
+    "1513666365": {
       "__type__": "RawAxis",
       "uid": {
         "__type__": "UID",
@@ -8,20 +8,20 @@
           "__registered__": "type",
           "repr": "RawAxis"
         },
-        "_id": 1425285455,
+        "_id": 1513666365,
         "_name": {
           "__type__": "DynamicName",
-          "body": "d",
+          "body": "dh",
           "subscript": null,
           "settings": null
         }
       },
       "_size": {
         "__type__": "Integer",
-        "_value": 4
+        "_value": 64
       }
     },
-    "458141929": {
+    "320936057": {
       "__type__": "RawAxis",
       "uid": {
         "__type__": "UID",
@@ -29,28 +29,7 @@
           "__registered__": "type",
           "repr": "RawAxis"
         },
-        "_id": 458141929,
-        "_name": {
-          "__type__": "DynamicName",
-          "body": "dff",
-          "subscript": null,
-          "settings": null
-        }
-      },
-      "_size": {
-        "__type__": "Integer",
-        "_value": 8
-      }
-    },
-    "2113486823": {
-      "__type__": "RawAxis",
-      "uid": {
-        "__type__": "UID",
-        "_type": {
-          "__registered__": "type",
-          "repr": "RawAxis"
-        },
-        "_id": 2113486823,
+        "_id": 320936057,
         "_name": {
           "__type__": "DynamicName",
           "body": "q",
@@ -60,7 +39,7 @@
       },
       "_size": {
         "__type__": "Integer",
-        "_value": 2
+        "_value": 8
       }
     }
   },
@@ -82,7 +61,7 @@
                   "body": "W",
                   "subscript": {
                     "__type__": "DynamicName",
-                    "body": "in",
+                    "body": "rec",
                     "subscript": null,
                     "settings": null
                   },
@@ -110,7 +89,7 @@
                     "name": "TILED"
                   },
                   {
-                    "__ref__": 1425285455
+                    "__ref__": 1513666365
                   }
                 ],
                 "iverson_expr": null
@@ -129,7 +108,7 @@
                     "name": "TILED"
                   },
                   {
-                    "__ref__": 458141929
+                    "__ref__": 1513666365
                   }
                 ],
                 "iverson_expr": null
@@ -143,7 +122,7 @@
                 ],
                 "_dom": [
                   {
-                    "__ref__": 2113486823
+                    "__ref__": 320936057
                   }
                 ]
               }
@@ -212,91 +191,12 @@
                 ],
                 "_dom": [
                   {
-                    "__ref__": 2113486823
+                    "__ref__": 320936057
                   },
                   {
-                    "__ref__": 458141929
+                    "__ref__": 1513666365
                   }
                 ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "__type__": "Broadcasted",
-        "operator": {
-          "__type__": "Linear",
-          "name": {
-            "__type__": "DynamicName",
-            "body": "L",
-            "subscript": {
-              "__type__": "DynamicName",
-              "body": "W",
-              "subscript": {
-                "__type__": "DynamicName",
-                "body": "out",
-                "subscript": null,
-                "settings": null
-              },
-              "settings": null
-            },
-            "settings": {
-              "__type__": "DynamicNameSettings",
-              "bold": true,
-              "overline": false,
-              "absolute": false
-            }
-          },
-          "bias": false
-        },
-        "input_weaves": [
-          {
-            "__type__": "Weave",
-            "datatype": {
-              "__type__": "Reals"
-            },
-            "_shape": [
-              {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
-              },
-              {
-                "__ref__": 458141929
-              }
-            ],
-            "iverson_expr": null
-          }
-        ],
-        "output_weaves": [
-          {
-            "__type__": "Weave",
-            "datatype": {
-              "__type__": "Reals"
-            },
-            "_shape": [
-              {
-                "__registered__": "enum",
-                "type": "WeaveMode",
-                "name": "TILED"
-              },
-              {
-                "__ref__": 1425285455
-              }
-            ],
-            "iverson_expr": null
-          }
-        ],
-        "reindexings": [
-          {
-            "__type__": "Rearrangement",
-            "mapping": [
-              0
-            ],
-            "_dom": [
-              {
-                "__ref__": 2113486823
               }
             ]
           }
@@ -306,9 +206,6 @@
     "routing": [
       [
         0
-      ],
-      [
-        1
       ]
     ],
     "n_external": 1

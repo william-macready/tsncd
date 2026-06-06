@@ -386,7 +386,7 @@ export class BroadcastedBox<B extends cat.Datatype, A extends cat.Axis, Op exten
         this.base_box.transform.offset = {
             x: this.base_box.parent_gap ??
             this.settings.broadcast_offset_x,
-            y: avg_y - height,
+            y: avg_y - height + this.base_box.vertical_shift,
         }
         this.base_box.transform.positioning = {y: -0.5};
     }
@@ -418,6 +418,7 @@ export class OperationBox<B extends cat.Datatype, A extends cat.Axis, Op extends
     public right_anchors: cr.ProdObjectMeridian<cat.Array<B, A>, B | A>;
     public core: rh.DiagramElement;
     public parent_gap?: number;
+    public vertical_shift: number = 0;
     constructor(
         public categoryRenderer: BroadcastedRenderer<B, A>,
         public target: cat.Broadcasted<B, A, Op>,
