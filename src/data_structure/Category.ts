@@ -2,6 +2,7 @@ export {
     ProdObject,
     Morphism,
     Block,
+    Scan,
     Composed,
     ProductOfMorphisms,
     Rearrangement,
@@ -39,7 +40,8 @@ export type ProdCategory<L, M extends pc.Morphism<L>> =
     M | pc.Rearrangement<L>
     | pc.ProductOfMorphisms<L, ProdCategory<L, M>>
     | pc.Composed<L, ProdCategory<L, M>>
-    | pc.Block<L, ProdCategory<L, M>>;
+    | pc.Block<L, ProdCategory<L, M>>
+    | pc.Scan<L, ProdCategory<L, M>>;
 
 export type StrideCategory<A extends sc.Axis> =
     ProdCategory<A, sc.StrideMorphism<A>>;

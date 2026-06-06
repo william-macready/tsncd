@@ -7,7 +7,8 @@ export type ProdCategory<L, M extends Morphism<L>> =
     | ProductOfMorphisms<L, ProdCategory<L, M>>
     | Composed<L, ProdCategory<L, M>>
     | ThreadedComposed<L, ProdCategory<L, M>>
-    | Block<L, ProdCategory<L, M>>;
+    | Block<L, ProdCategory<L, M>>
+    | Scan<L, ProdCategory<L, M>>;
 
 @fd.register_term
 export class ProdObject<L> extends fd.Term {
@@ -74,6 +75,55 @@ export class Block<L, M extends Morphism<L>> extends Morphism<L> {
     }
     get aesthetics(): null | BlockAesthetics {
         return this.block_tag.aesthetics;
+    }
+}
+
+@fd.register_term
+export class Scan<L, M extends Morphism<L>> extends Morphism<L> {
+    // Field order MUST match pyncd data_structure.TensorDSL.Scan:
+    // (step, base, N, axis, affine, n_states, step_state_deps)
+    constructor(
+        readonly step: M | M[],
+        readonly base: M | M[],
+        readonly N: nm.Numeric,
+        readonly axis: any,
+        readonly affine: any = null,
+        readonly n_states: fd.int = 1,
+        readonly step_state_deps: number[][] = [],
+    ) { super(); }
+
+    // The morphisms that make up the recurrence step (one for uncoupled,
+    // several for coupled Jacobi scans).
+    get steps(): M[] {
+        return Array.isArray(this.step) ? this.step : [this.step];
+    }
+    // Rendered inside the Scan block: the (first) step body.
+    get body(): M {
+        return this.steps[0];
+    }
+    // Reuse BlockBox bracket: the step count annotates the bracket.
+    get repetition(): nm.Numeric {
+        return this.N;
+    }
+    // Reuse BlockBox backdrop + title.
+    get aesthetics(): BlockAesthetics {
+        const axis_name =
+            this.axis?.uid?._name?.body ?? 'l';
+        const n = (this.N as any)?._value;
+        const n_str = n === undefined ? '' : `, N=${n}`;
+        return new BlockAesthetics(
+            `Scan over ${axis_name}${n_str}`,
+            null,
+            '#d6f5ee',
+        );
+    }
+    dom(): ProdObject<L> {
+        return new ProdObject<L>(
+            this.steps.flatMap(s => s.dom().content));
+    }
+    cod(): ProdObject<L> {
+        return new ProdObject<L>(
+            this.steps.flatMap(s => s.cod().content));
     }
 }
 

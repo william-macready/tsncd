@@ -211,8 +211,8 @@ class DefaultMorphismBox<L, M extends cat.Morphism<L>, A=L> extends MorphismBox<
 }
 
 export class BlockBox<L, M extends cat.Morphism<L>, A=L> extends MorphismBox<L, M, A> {
-    private outer_box: rh.DiagramElement;
-    private inner_box: MorphismBox<L, cat.ProdCategory<L, M>, A>;
+    protected outer_box: rh.DiagramElement;
+    protected inner_box: MorphismBox<L, cat.ProdCategory<L, M>, A>;
     private iteration_annotation?: rh.AnnotationElement;
     constructor(
         public categoryRenderer: CategoryRenderer<L, M, A>,
@@ -336,6 +336,135 @@ export class BlockBox<L, M extends cat.Morphism<L>, A=L> extends MorphismBox<L, 
         }
         this.draw_left_bracket();
         this.draw_right_bracket();
+    }
+}
+
+/*
+    SCAN RENDERING
+    A ScanBox reuses BlockBox entirely (teal backdrop + title + N bracket, with the
+    step body rendered inside) and adds the one element a Block does not have: the
+    carry feedback arc that returns the state from the step's output to its input.
+    See papers/iteration.md §7.
+*/
+export class ScanBox<L, M extends cat.Morphism<L>, A=L> extends BlockBox<L, M, A> {
+    constructor(
+        public categoryRenderer: CategoryRenderer<L, M, A>,
+        public scan: cat.Scan<L, cat.ProdCategory<L, M>>,
+        public capped: boolean = true,
+    ) {
+        // Scan exposes body / aesthetics / repetition getters, so BlockBox renders
+        // it unchanged.
+        super(categoryRenderer, scan as unknown as cat.Block<L, cat.ProdCategory<L, M>>, capped);
+        // Widen the box horizontally so the step body (e.g. the trailing relu) has
+        // breathing room from the bracket; BlockBox's default x padding is only 10.
+        const extra = 30;
+        if (this.outer_box.width !== undefined) {
+            this.outer_box.width += extra;
+        }
+        const off = this.inner_box.transform.offset;
+        this.inner_box.transform.offset = {
+            x: (off?.x ?? 0) + extra / 2,
+            y: off?.y ?? 0,
+        };
+    }
+
+    // Bracket without the repetition count (N is shown in the title instead, so it
+    // never overlaps the incoming wire's axis label).
+    protected draw_left_bracket(): void {
+        const rect = this.rectangle();
+        const bracket_depth = 5;
+        this.draw?.polyline(
+            [
+                { x: rect.left + bracket_depth, y: rect.top },
+                { x: rect.left, y: rect.top + bracket_depth },
+                { x: rect.left, y: rect.bottom - bracket_depth },
+                { x: rect.left + bracket_depth, y: rect.bottom },
+            ],
+            { stroke: 'black', 'stroke-width': '3px' },
+            'main',
+        );
+    }
+
+    // Title placed ABOVE the box (under the carry arch) so it never overlaps the
+    // step wires. Backdrop is drawn the same as BlockBox.
+    protected draw_core(): void {
+        const aesthetics = this.target.aesthetics;
+        if (!aesthetics) {
+            return;
+        }
+        const rect = this.rectangle();
+        this.draw?.drawRectangle(
+            rect,
+            { fill: aesthetics.fill_color || 'none', stroke: 'none' },
+            { dropShadow: true },
+            'background',
+        );
+        if (aesthetics.title) {
+            this.renderHandler.annotation_handler.addAnnotation(
+                new pt.Rectangle(
+                    { x: rect.left, y: rect.top - 48 },
+                    { x: rect.width, y: 16 },
+                ),
+                new rh.AnnotationElement(
+                    this.renderHandler,
+                    `\\text{${aesthetics.title}}`,
+                    { font_size: 0.5, vertical_align: 'center', horizontal_align: 'center' },
+                ),
+            );
+        }
+    }
+
+    // The carry: a rounded arc returning the state from the box's output (right)
+    // over the top back to its input (left), with an arrowhead at the re-entry and
+    // a ⟲ marker. This is the one mark a plain Block does not have (a trace).
+    protected draw_carry(): void {
+        const rect = this.rectangle();
+        const y = rect.top + rect.height / 2;
+        const top = rect.top - 16;
+        const r = 6;
+        const xr = rect.right + 14;
+        const xl = rect.left - 14;
+        this.draw?.polyline(
+            [
+                { x: rect.right, y },
+                { x: xr, y: y - 10 },
+                { x: xr, y: top + r },
+                { x: xr - r, y: top },
+                { x: xl + r, y: top },
+                { x: xl, y: top + r },
+                { x: xl, y: y - 10 },
+                { x: rect.left, y },
+            ],
+            { stroke: '#cc0000', 'stroke-width': '3px' },
+            'main',
+        );
+        // arrowhead pointing down into the box's left (state) input
+        this.draw?.deltaPolygon(
+            [
+                { x: rect.left, y },
+                { x: -4, y: -8 },
+                { x: 8, y: 0 },
+            ],
+            { fill: '#cc0000', stroke: '#cc0000' },
+            {},
+        );
+        // ⟲ carry marker above the apex
+        this.renderHandler.annotation_handler.addAnnotation(
+            new pt.Rectangle(
+                { x: rect.left, y: top - 14 },
+                { x: rect.width, y: 12 },
+            ),
+            new rh.AnnotationElement(
+                this.renderHandler,
+                `\\textcolor{#cc0000}{\\circlearrowleft\\ \\text{carry}}`,
+                { font_size: 0.42, vertical_align: 'center', horizontal_align: 'center' },
+            ),
+        );
+    }
+
+    update(): void {
+        super.update();
+        this.draw_carry();
     }
 }
 
@@ -703,6 +832,9 @@ export abstract class CategoryRenderer<
         }
         if (target instanceof cat.Block) {
             return new BlockBox(this, target, capped);
+        }
+        if (target instanceof cat.Scan) {
+            return new ScanBox(this, target, capped);
         }
         if (capped) {
             return new ComposedBox(
